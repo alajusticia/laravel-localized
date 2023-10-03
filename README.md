@@ -29,21 +29,9 @@ composer require alajusticia/laravel-localized
 php artisan vendor:publish --provider="ALajusticia\Localized\LocalizedServiceProvider"
 ```
 
-3. Make your `App\Http\Kernel` class extend the `ALajusticia\Localized\Http\Kernel` class instead of the 
-`Illuminate\Foundation\Http\Kernel` class, in order to insert the localization middleware at the right position in the 
-middleware priority array (otherwise the redirection of unauthenticated users will fail to add the right locale 
-in the URL):
-
-```php
-use ALajusticia\Localized\Http\Kernel as HttpKernel;
-
-class Kernel extends HttpKernel
-{
-```
-
-Or, if you prefer you can do it manually by adding the `ALajusticia\Localized\Http\Middleware\Localize` and
-`ALajusticia\Localized\Http\Middleware\PrefixRoutes` middleware after the `Illuminate\Session\Middleware\StartSession`
-middleware and before the `Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests` middleware in your 
+3. Add the `ALajusticia\Localized\Http\Middleware\Localize` and `ALajusticia\Localized\Http\Middleware\PrefixRoutes` 
+middleware after the `Illuminate\Session\Middleware\StartSession` middleware and before the 
+`Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests` middleware in the `middlewarePriority` array of your 
 `App\Http\Kernel` class:
 
 ```php

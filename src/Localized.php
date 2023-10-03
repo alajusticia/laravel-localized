@@ -29,6 +29,10 @@ class Localized
 
     private function applyLocale(string $locale): void
     {
+        if (!in_array($locale, $this->availableLocales)) {
+            $locale = Config::get('app.locale', 'en');
+        }
+
         App::setLocale($locale);
         URL::defaults(['locale' => $locale]);
     }
