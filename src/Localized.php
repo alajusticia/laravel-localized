@@ -46,9 +46,8 @@ class Localized
         $locale = $this->rememberedLocale ?: $this->requestedLocale;
 
         if (is_null($locale)) {
-            // If locale not provided or not found in available locales, try to use
-            // the preferred language or fallback to the default application locale
-            $locale = $this->preferredLocale ?: Config::get('app.locale', 'en');
+            // If locale not provided or not found in available locales, try to use the preferred language
+            $locale = $this->preferredLocale;
         } elseif (Config::get('localized.suggest_locale')) {
             $this->checkPreferredLocale();
         }
@@ -83,7 +82,7 @@ class Localized
         $languages = [];
 
         foreach ($this->availableLocales as $availableLocale) {
-            $languages[$availableLocale] = __('localized::locales.' . $availableLocale, [], $availableLocale);
+            $languages[$availableLocale] = ucfirst(__('localized::locales.' . $availableLocale, [], $availableLocale));
         }
 
         return Arr::sort($languages);

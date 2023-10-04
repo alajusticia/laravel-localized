@@ -7,7 +7,7 @@ them and remembering their preferences.
 * [Installation](#installation)
 * [Configuration](#configuration)
 * [Usage](#usage)
-    * [Switch the language](#switch-the-language)
+    * [Select/switch the language](#selectswitch-the-language)
     * [Suggest appropriate language](#suggest-appropriate-language)
 * [License](#license)
 
