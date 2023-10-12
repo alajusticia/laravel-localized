@@ -6,6 +6,7 @@ use ALajusticia\Localized\Http\Middleware\Localize;
 use ALajusticia\Localized\Http\Middleware\PrefixRoutes;
 use ALajusticia\Localized\Macros\BlueprintMacros;
 use ALajusticia\Localized\Macros\RouteMacros;
+use ALajusticia\Localized\Providers\EventServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Config;
@@ -40,6 +41,9 @@ class LocalizedServiceProvider extends ServiceProvider
 
         // Set the global pattern for the "locale" route parameter
         Route::pattern('locale', implode('|', Localized::availableLocales()));
+
+        // Register our event service provider
+        $this->app->register(EventServiceProvider::class);
     }
 
     /**

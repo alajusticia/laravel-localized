@@ -176,10 +176,10 @@ public function updateLocale(UpdateLocaleRequest $request, Localized $localized)
 }
 ```
 
-When a user selects a language, the package will save the related locale in the session with the key
-`localizedRememberedLocale`. If you want, you can also configure the package to save the selected locale in the database.
-This way, the locale will be saved on the user model and will be remembered whenever the user is logged in (even if the
-user is using another device). Enable this feature in the `localized.php` configuration file:
+When a user selects a language, the package will save the related locale in a cookie named `localized_remembered_locale`. 
+If you want, you can also configure the package to save the selected locale in the database. This way, the locale will be 
+saved on the user model and will be remembered whenever the user is logged in (even if the user is using another device). 
+Enable this feature in the `localized.php` configuration file:
 
 ```php
 'attach_locale_to_user' => true,

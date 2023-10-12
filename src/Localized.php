@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -27,7 +28,7 @@ class Localized
         $this->availableLocales = Config::get('localized.locales', ['en']);
     }
 
-    private function applyLocale(string $locale): void
+    public function applyLocale(?string $locale): string
     {
         if (!in_array($locale, $this->availableLocales)) {
             $locale = Config::get('app.locale', 'en');
@@ -35,6 +36,8 @@ class Localized
 
         App::setLocale($locale);
         URL::defaults(['locale' => $locale]);
+
+        return $locale;
     }
 
     public function initLocale(): string
@@ -52,19 +55,18 @@ class Localized
             $this->checkPreferredLocale();
         }
 
-        $this->applyLocale($locale);
-
-        return $locale;
+        return $this->applyLocale($locale);
     }
 
     private function resolveRememberedLocale(): ?string
     {
-        if (Config::get('localized.attach_locale_to_user') && Auth::user() && !empty(Auth::user()->locale)) {
-            $locale = Auth::user()->locale;
-        } elseif (!Session::isStarted()) {
-            $locale = Request::header('X-Localized-Remembered-Locale');
+        if (Config::get('localized.attach_locale_to_user') && Auth::user() && !empty(Auth::user()->{Config::get('localized.locale_column_name', 'locale')})) {
+            $locale = Auth::user()->{Config::get('localized.locale_column_name', 'locale')};
+            if (!Cookie::has('localized_remembered_locale')) {
+                Cookie::queue('localized_remembered_locale', $locale);
+            }
         } else {
-            $locale = Session::get('localizedRememberedLocale');
+            $locale = Cookie::get('localized_remembered_locale') ?: Request::header('X-Localized-Remembered-Locale');
         }
 
         return in_array($locale, $this->availableLocales) ? $locale : null;
@@ -129,9 +131,7 @@ class Localized
             if (Config::get('localized.attach_locale_to_user') && Auth::user()) {
                 Auth::user()->forceFill([Config::get('localized.locale_column_name', 'locale') => $locale])->save();
             }
-            if (Session::isStarted()) {
-                Session::put('localizedRememberedLocale', $locale);
-            }
+            Cookie::queue('localized_remembered_locale', $locale);
             $this->applyLocale($locale);
         }
     }

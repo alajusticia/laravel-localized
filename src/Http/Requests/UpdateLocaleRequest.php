@@ -23,7 +23,6 @@ class UpdateLocaleRequest extends FormRequest
     {
         return [
             'locale' => [
-                'nullable',
                 'string',
                 Rule::in(Localized::availableLocales()),
             ],
