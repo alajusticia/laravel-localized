@@ -25,10 +25,10 @@ class Localize
 
         $response = $next($request);
 
-        $response->header('X-Localized-Locale', $currentLocale);
+        $response->headers->set('X-Localized-Locale', $currentLocale);
 
         if ($suggestedLocale = $this->localized->getSuggestedLocale()) {
-            $response->header('X-Localized-Suggested-Locale', $suggestedLocale);
+            $response->headers->set('X-Localized-Suggested-Locale', $suggestedLocale);
         }
 
         return $response;
